@@ -1,336 +1,74 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zubin Tagore</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23f5f0e8'/%3E%3Ctext x='16' y='24' font-family='Georgia%2C serif' font-size='22' font-style='italic' font-weight='400' fill='%231a1610' text-anchor='middle'%3EZ%3C/text%3E%3C/svg%3E">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:ital@0;1&family=DM+Serif+Display:ital@0;1&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zubin Tagore</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: #0a0a0a;
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  :root {
-    --cream: #f5f0e8;
-    --ink: #1a1610;
-    --warm: #7a9e7e;
-    --muted: #8a7f6e;
-  }
+    .container {
+      text-align: center;
+      padding: 2rem;
+    }
 
-  body {
-    background: var(--cream);
-    color: var(--ink);
-    font-family: 'Cormorant Garamond', serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-  }
+    .name {
+      font-size: clamp(2rem, 6vw, 4rem);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: #f0f0f0;
+    }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 100;
-    opacity: 0.6;
-  }
+    .dot {
+      color: #888;
+    }
 
-  .frame-line { position: fixed; background: var(--ink); opacity: 0.08; }
-  .frame-line.top    { top: 24px; left: 0; right: 0; height: 1px; }
-  .frame-line.bottom { bottom: 24px; left: 0; right: 0; height: 1px; }
-  .frame-line.left   { left: 24px; top: 0; bottom: 0; width: 1px; }
-  .frame-line.right  { right: 24px; top: 0; bottom: 0; width: 1px; }
+    .status {
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #555;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
 
-  .sprockets { position: fixed; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 40px 0; opacity: 0.12; }
-  .sprockets.left  { left: 7px; }
-  .sprockets.right { right: 7px; }
-  .sprocket { width: 8px; height: 6px; border: 1px solid var(--ink); border-radius: 1px; }
+    .pulse {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: #555;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+      animation: pulse 2s ease-in-out infinite;
+    }
 
-  .shutter {
-    position: fixed; inset: 0;
-    background: var(--ink);
-    z-index: 50;
-    animation: shutter-open 1.4s cubic-bezier(0.77,0,0.18,1) 0.3s forwards;
-    clip-path: circle(100% at 50% 50%);
-  }
-  @keyframes shutter-open {
-    0%   { clip-path: circle(100% at 50% 50%); opacity: 1; }
-    70%  { clip-path: circle(2% at 50% 50%);   opacity: 1; }
-    100% { clip-path: circle(0% at 50% 50%);   opacity: 0; pointer-events: none; }
-  }
-
-  .container {
-    text-align: center;
-    position: relative;
-    z-index: 10;
-    opacity: 0;
-    animation: fade-up 1s ease 1.5s forwards;
-    padding: 20px;
-  }
-  @keyframes fade-up {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .lens-wrap { margin: 0 auto 36px; width: 120px; height: 120px; position: relative; }
-  .lens-svg { width: 100%; height: 100%; animation: slow-rotate 20s linear infinite; }
-  @keyframes slow-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  .lens-inner {
-    position: absolute; inset: 28px; border-radius: 50%;
-    border: 1px solid var(--ink); opacity: 0.2;
-    animation: pulse-ring 3s ease-in-out infinite;
-  }
-  @keyframes pulse-ring {
-    0%, 100% { transform: scale(1); opacity: 0.2; }
-    50%       { transform: scale(1.08); opacity: 0.08; }
-  }
-  .lens-dot { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-  .lens-dot::after {
-    content: ''; width: 6px; height: 6px; border-radius: 50%;
-    background: var(--warm);
-    animation: pulse-dot 3s ease-in-out infinite;
-  }
-  @keyframes pulse-dot {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50%       { transform: scale(1.5); opacity: 0.6; }
-  }
-
-  .eyeline {
-    font-family: 'Courier Prime', monospace;
-    font-size: 10px; letter-spacing: 0.22em; color: var(--muted);
-    text-transform: uppercase; margin-bottom: 20px;
-    opacity: 0; animation: fade-up 0.8s ease 2s forwards;
-  }
-
-  h1 {
-    font-weight: 300; font-size: clamp(48px, 10vw, 68px);
-    line-height: 1.05; letter-spacing: -0.01em; color: var(--ink);
-    margin-bottom: 6px; opacity: 0; animation: fade-up 0.8s ease 2.1s forwards;
-  }
-  h1 em { font-style: italic; color: var(--warm); }
-
-  .tagline {
-    font-style: italic;
-    font-size: clamp(18px, 4vw, 20px); color: var(--muted);
-    font-weight: 300; margin-bottom: 48px;
-    opacity: 0; animation: fade-up 0.8s ease 2.3s forwards;
-  }
-
-  .searching-wrap {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 8px; margin-bottom: 52px;
-    opacity: 0; animation: fade-up 0.8s ease 2.5s forwards;
-  }
-  .searching-label {
-    font-family: 'Courier Prime', monospace;
-    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
-  }
-  .cursor-word {
-    font-style: italic;
-    font-size: 20px; color: var(--warm); text-align: center;
-    border-right: 1px solid var(--warm); padding-right: 3px;
-    animation: blink-cursor 0.9s step-end infinite; white-space: nowrap; overflow: hidden;
-    min-width: 1px;
-  }
-  @keyframes blink-cursor {
-    0%, 100% { border-color: var(--warm); }
-    50%       { border-color: transparent; }
-  }
-
-  .countdown-wrap {
-    opacity: 0; animation: fade-up 0.8s ease 2.7s forwards;
-  }
-  .countdown-label {
-    font-family: 'Courier Prime', monospace;
-    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 14px;
-  }
-
-  .countdown-units {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: nowrap;
-  }
-  .unit {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-  .unit-num {
-    font-family: 'DM Serif Display', serif;
-    font-weight: 400;
-    font-size: clamp(36px, 8vw, 64px);
-    color: var(--ink);
-    line-height: 1;
-    letter-spacing: -0.02em;
-    min-width: 1.8ch;
-    text-align: center;
-  }
-  .unit-label {
-    font-family: 'Courier Prime', monospace;
-    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--muted);
-  }
-  .unit-sep {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(24px, 4vw, 40px);
-    color: var(--muted);
-    opacity: 0.25;
-    line-height: 1;
-    margin-bottom: 14px;
-    flex-shrink: 0;
-  }
-
-
-  @media (max-width: 600px) {
-    .sprockets { display: none; }
-    .frame-line.left, .frame-line.right { display: none; }
-    .lens-wrap { width: 90px; height: 90px; margin-bottom: 24px; }
-    .container { padding: 16px; }
-    .countdown-units { gap: 12px; }
-    .unit-sep { font-size: 28px; padding-bottom: 14px; }
-    .searching-wrap { flex-direction: column; gap: 6px; }
-    .cursor-word { min-width: unset; font-size: 20px; }
-    .tagline { margin-bottom: 32px; }
-  }
-</style>
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+  </style>
 </head>
 <body>
-
-<div class="shutter"></div>
-<div class="frame-line top"></div>
-<div class="frame-line bottom"></div>
-<div class="frame-line left"></div>
-<div class="frame-line right"></div>
-
-<div class="sprockets left">
-  <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
-  <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
-  <div class="sprocket"></div><div class="sprocket"></div>
-</div>
-<div class="sprockets right">
-  <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
-  <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
-  <div class="sprocket"></div><div class="sprocket"></div>
-</div>
-
-
-<div class="container">
-
-  <div class="lens-wrap">
-    <svg class="lens-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="60" cy="60" r="55" stroke="#1a1610" stroke-width="0.6" opacity="0.15"/>
-      <circle cx="60" cy="60" r="46" stroke="#1a1610" stroke-width="0.5" opacity="0.2"/>
-      <g opacity="0.25">
-        <path d="M60 14 L66 46 L54 46 Z" fill="#1a1610"/>
-        <path d="M99 37 L72 55 L78 66 Z" fill="#1a1610"/>
-        <path d="M99 83 L67 68 L72 57 Z" fill="#1a1610"/>
-        <path d="M60 106 L54 74 L66 74 Z" fill="#1a1610"/>
-        <path d="M21 83 L48 65 L42 54 Z" fill="#1a1610"/>
-        <path d="M21 37 L53 52 L48 63 Z" fill="#1a1610"/>
-      </g>
-      <g opacity="0.2" stroke="#1a1610" stroke-width="0.5">
-        <line x1="60" y1="6"   x2="60" y2="12"/>
-        <line x1="60" y1="108" x2="60" y2="114"/>
-        <line x1="6"  y1="60"  x2="12" y2="60"/>
-        <line x1="108" y1="60" x2="114" y2="60"/>
-      </g>
-    </svg>
-    <div class="lens-inner"></div>
-    <div class="lens-dot"></div>
+  <div class="container">
+    <h1 class="name">Zubin Tagore<span class="dot">.</span></h1>
+    <p class="status">
+      <span class="pulse"></span>
+      Coming soon
+    </p>
   </div>
-
-  <div class="eyeline">currently in frame</div>
-  <h1>Zubin <em>Tagore</em></h1>
-  <p class="tagline">searching</p>
-
-  <div class="searching-wrap">
-    <span class="searching-label">looking for</span>
-    <span class="cursor-word" id="typeword"></span>
-  </div>
-
-  <div class="countdown-wrap">
-    <p class="countdown-label">new site arriving in</p>
-    <div class="countdown-units">
-      <div class="unit">
-        <div class="unit-num" id="cd-days">--</div>
-        <div class="unit-label">days</div>
-      </div>
-      <div class="unit-sep">:</div>
-      <div class="unit">
-        <div class="unit-num" id="cd-hrs">--</div>
-        <div class="unit-label">hours</div>
-      </div>
-      <div class="unit-sep">:</div>
-      <div class="unit">
-        <div class="unit-num" id="cd-min">--</div>
-        <div class="unit-label">minutes</div>
-      </div>
-      <div class="unit-sep">:</div>
-      <div class="unit">
-        <div class="unit-num" id="cd-sec">--</div>
-        <div class="unit-label">seconds</div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-
-<script>
-  const words = [
-    "the right words",
-    "a reason to laugh",
-    "what comes next",
-    "something worth making",
-    "the people in the room",
-    "a story that sticks",
-    "where I belong",
-    "the view from here",
-    "a little clarity",
-    "still searching",
-  ];
-  let wi = 0, ci = 0, deleting = false;
-  const el = document.getElementById('typeword');
-  function type() {
-    const word = words[wi];
-    if (!deleting) {
-      el.textContent = word.slice(0, ++ci);
-      if (ci === word.length) { deleting = true; setTimeout(type, 2200); return; }
-    } else {
-      el.textContent = word.slice(0, --ci);
-      if (ci === 0) { deleting = false; wi = (wi + 1) % words.length; }
-    }
-    setTimeout(type, deleting ? 38 : 78);
-  }
-  setTimeout(type, 2800);
-
-
-  function pad(n) { return String(n).padStart(2, '0'); }
-  function updateCountdown() {
-    const target = new Date('2026-04-24T00:00:00');
-    const now = new Date();
-    const diff = target - now;
-    if (diff <= 0) {
-      ['cd-days','cd-hrs','cd-min','cd-sec'].forEach(id => document.getElementById(id).textContent = '00');
-      return;
-    }
-    document.getElementById('cd-days').textContent = pad(Math.floor(diff / (1000*60*60*24)));
-    document.getElementById('cd-hrs').textContent  = pad(Math.floor((diff % (1000*60*60*24)) / (1000*60*60)));
-    document.getElementById('cd-min').textContent  = pad(Math.floor((diff % (1000*60*60)) / (1000*60)));
-    document.getElementById('cd-sec').textContent  = pad(Math.floor((diff % (1000*60)) / 1000));
-  }
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-</script>
 </body>
 </html>
