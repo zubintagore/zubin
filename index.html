@@ -121,19 +121,20 @@
   }
 
   .searching-wrap {
-    display: flex; align-items: center; justify-content: center;
-    gap: 10px; margin-bottom: 52px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; margin-bottom: 52px;
     opacity: 0; animation: fade-up 0.8s ease 2.5s forwards;
   }
   .searching-label {
     font-family: 'Courier Prime', monospace;
-    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
   }
   .cursor-word {
     font-style: italic;
-    font-size: 18px; color: var(--warm); min-width: 200px; text-align: left;
+    font-size: 20px; color: var(--warm); text-align: center;
     border-right: 1px solid var(--warm); padding-right: 3px;
     animation: blink-cursor 0.9s step-end infinite; white-space: nowrap; overflow: hidden;
+    min-width: 1px;
   }
   @keyframes blink-cursor {
     0%, 100% { border-color: var(--warm); }
@@ -151,9 +152,10 @@
 
   .countdown-units {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    gap: 28px;
+    gap: 16px;
+    flex-wrap: nowrap;
   }
   .unit {
     display: flex;
@@ -164,54 +166,28 @@
   .unit-num {
     font-family: 'DM Serif Display', serif;
     font-weight: 400;
-    font-size: clamp(38px, 7vw, 64px);
+    font-size: clamp(36px, 8vw, 64px);
     color: var(--ink);
     line-height: 1;
     letter-spacing: -0.02em;
-    min-width: 2.2ch;
+    min-width: 1.8ch;
     text-align: center;
   }
   .unit-label {
     font-family: 'Courier Prime', monospace;
-    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--muted);
   }
   .unit-sep {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 5vw, 52px);
+    font-size: clamp(24px, 4vw, 40px);
     color: var(--muted);
-    opacity: 0.3;
+    opacity: 0.25;
     line-height: 1;
-    padding-bottom: 18px;
+    margin-bottom: 14px;
+    flex-shrink: 0;
   }
 
-  .exposure {
-    position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%);
-    display: flex; align-items: center; gap: 4px;
-    opacity: 0; animation: fade-up 0.8s ease 3s forwards;
-  }
-  .exp-bar {
-    width: 3px; background: var(--ink); opacity: 0.1; border-radius: 1px;
-    animation: exp-pulse 2.4s ease-in-out infinite;
-  }
-  .exp-bar:nth-child(1) { animation-delay: 0s;    height: 6px;  }
-  .exp-bar:nth-child(2) { animation-delay: 0.15s; height: 10px; }
-  .exp-bar:nth-child(3) { animation-delay: 0.3s;  height: 14px; }
-  .exp-bar:nth-child(4) { animation-delay: 0.45s; height: 18px; }
-  .exp-bar:nth-child(5) { animation-delay: 0.6s;  height: 14px; }
-  .exp-bar:nth-child(6) { animation-delay: 0.75s; height: 10px; }
-  .exp-bar:nth-child(7) { animation-delay: 0.9s;  height: 6px;  }
-  @keyframes exp-pulse {
-    0%, 100% { opacity: 0.1; }
-    50%       { opacity: 0.35; }
-  }
-
-  .frame-counter {
-    position: fixed; top: 36px; right: 40px;
-    font-family: 'Courier Prime', monospace; font-size: 10px;
-    letter-spacing: 0.2em; color: var(--ink); opacity: 0.18;
-  }
-  .frame-counter span { color: var(--warm); opacity: 1; }
 
   @media (max-width: 600px) {
     .sprockets { display: none; }
@@ -245,7 +221,6 @@
   <div class="sprocket"></div><div class="sprocket"></div>
 </div>
 
-<div class="frame-counter">© ZT &nbsp;/&nbsp; <span id="fc">001</span></div>
 
 <div class="container">
 
@@ -308,11 +283,6 @@
 
 </div>
 
-<div class="exposure">
-  <div class="exp-bar"></div><div class="exp-bar"></div><div class="exp-bar"></div>
-  <div class="exp-bar"></div><div class="exp-bar"></div><div class="exp-bar"></div>
-  <div class="exp-bar"></div>
-</div>
 
 <script>
   const words = [
@@ -342,9 +312,6 @@
   }
   setTimeout(type, 2800);
 
-  let fc = 1;
-  const fcEl = document.getElementById('fc');
-  setInterval(() => { fc = (fc % 999) + 1; fcEl.textContent = String(fc).padStart(3,'0'); }, 3200);
 
   function pad(n) { return String(n).padStart(2, '0'); }
   function updateCountdown() {
