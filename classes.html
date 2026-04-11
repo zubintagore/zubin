@@ -215,7 +215,7 @@ function getWeekNumber(dateStr) {
   return Math.floor((d - start) / (7 * 86400000)) + 1;
 }
 
-export default function App() {
+function App() {
   const [tab, setTab] = useState("overview");
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [calMonth, setCalMonth] = useState(TODAY.getMonth());
