@@ -83,7 +83,7 @@ body { background: #FAF8F5; }
 <div id="root"></div>
 
 <script type="text/babel">
-const { useState, useMemo } = React;
+const { useState, useMemo, useEffect } = React;
 
 const COURSES = [
   {
@@ -225,6 +225,31 @@ function App() {
   const [calMonth, setCalMonth] = useState(TODAY.getMonth());
   const [expandedCard, setExpandedCard] = useState(null);
   const [expandedEvent, setExpandedEvent] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [countdown, setCountdown] = useState("");
+
+  useEffect(() => {
+    const END = new Date("2026-06-12T14:30:00");
+    const tick = () => {
+      const diff = END - new Date();
+      if (diff <= 0) { setCountdown("Quarter complete ✓"); return; }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      setCountdown(`${d}d ${String(h).padStart(2,"0")}h ${String(m).padStart(2,"0")}m ${String(s).padStart(2,"0")}s`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // How far through current week (Mon=0 → Sun=1)
+  const weekDayPct = (() => {
+    const d = TODAY.getDay(); // 0=Sun,1=Mon…6=Sat
+    const monBased = d === 0 ? 6 : d - 1;
+    return monBased / 6;
+  })();
 
   const upcoming = useMemo(() => {
     return EVENTS
@@ -281,20 +306,26 @@ function App() {
       <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg,#1A1A1A 0%,#2D2D2D 100%)", padding: "48px 32px 32px", color: "#FAF8F5" }}>
+      <div style={{ background: "linear-gradient(135deg,#1A1A1A 0%,#2D2D2D 100%)", padding: "40px 32px 28px", color: "#FAF8F5" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, letterSpacing: 3, textTransform: "uppercase", opacity: 0.45, marginBottom: 8 }}>UCLA Spring 2026</div>
-          <h1 style={{ fontFamily: "'Newsreader',serif", fontSize: 36, fontWeight: 700, margin: 0, lineHeight: 1.15 }}>Quarter Dashboard</h1>
-          <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, opacity: 0.55 }}>
+          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 10, letterSpacing: 3, textTransform: "uppercase", opacity: 0.4, marginBottom: 6 }}>UCLA · Spring 2026</div>
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+            <h1 style={{ fontFamily: "'Newsreader',serif", fontSize: 32, fontWeight: 700, margin: 0, lineHeight: 1.15 }}>Zubin's Spring Quarter Dashboard</h1>
+            <div style={{ textAlign: "right" }}>
+              <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", opacity: 0.4, marginBottom: 3 }}>ends Jun 12</div>
+              <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 22, fontWeight: 400, letterSpacing: 2, color: "#FAF8F5", opacity: 0.9 }}>{countdown}</div>
+            </div>
+          </div>
+          <div style={{ marginTop: 18, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, opacity: 0.5 }}>
               Today: {TODAY.toLocaleDateString("en-US",{ weekday:"long", month:"long", day:"numeric", year:"numeric" })}
             </div>
-            <div style={{ flex: 1, minWidth: 120, maxWidth: 260 }}>
-              <div style={{ height: 4, background: "rgba(255,255,255,0.12)", borderRadius: 2, overflow: "hidden" }}>
-                <div style={{ width: `${pct}%`, height: "100%", background: "linear-gradient(90deg,#E86C47,#8B6BAE)", borderRadius: 2 }} />
+            <div style={{ flex: 1, minWidth: 120, maxWidth: 240 }}>
+              <div style={{ height: 3, background: "rgba(255,255,255,0.12)", borderRadius: 2, overflow: "hidden" }}>
+                <div style={{ width: `${pct}%`, height: "100%", background: "linear-gradient(90deg,#C94F72,#C9A227)", borderRadius: 2 }} />
               </div>
             </div>
-            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, opacity: 0.45 }}>{pct}% through quarter</div>
+            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, opacity: 0.4 }}>{pct}% through quarter</div>
           </div>
         </div>
       </div>
@@ -320,7 +351,7 @@ function App() {
         {/* OVERVIEW */}
         {tab === "overview" && (
           <div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16, marginBottom: 32 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16, marginBottom: 32, alignItems: "start" }}>
               {COURSES.map((c) => (
                 <div key={c.id} onClick={() => setExpandedCard(expandedCard === c.id ? null : c.id)} style={{
                   background: "#fff", borderRadius: 12, padding: 24, cursor: "pointer",
@@ -366,13 +397,16 @@ function App() {
                     const key = "up-" + e.date + e.label;
                     const isOpen = expandedEvent === key;
                     const clickable = e.type === "reading" && e.full;
+                    const isHighlighted = e.type === "exam" || e.type === "deadline";
+                    const rowBg = isHighlighted ? (e.course ? courseColor(e.course) + "14" : "#fff5f0") : "transparent";
+                    const rowBorder = isHighlighted ? `2px solid ${e.course ? courseColor(e.course) + "60" : "#f0d0c0"}` : "none";
                     return (
                       <div key={i} style={{ borderBottom: i < upcoming.length - 1 ? "1px solid #f3f1ee" : "none" }}>
                         <div
                           onClick={() => clickable && setExpandedEvent(isOpen ? null : key)}
-                          style={{ padding: "12px 18px", display: "flex", gap: 12, alignItems: "center", cursor: clickable ? "pointer" : "default" }}
+                          style={{ padding: "12px 18px", display: "flex", gap: 12, alignItems: "center", cursor: clickable ? "pointer" : "default", background: rowBg, border: rowBorder, borderRadius: isHighlighted ? 6 : 0, margin: isHighlighted ? "4px 10px" : 0 }}
                         >
-                          <div style={{ width: 28, height: 28, borderRadius: 6, background: e.course ? courseColor(e.course) : "#ccc", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{typeIcon(e.type)}</div>
+                          <div style={{ width: 28, height: 28, borderRadius: "50%", background: isHighlighted ? (e.course ? courseColor(e.course) : "#E8483E") : (e.course ? courseColor(e.course) + "22" : "#eee"), border: isHighlighted ? "none" : `1.5px solid ${e.course ? courseColor(e.course) + "55" : "#ccc"}`, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{isHighlighted ? "!" : ""}</div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{e.label}{clickable && <span style={{ marginLeft: 5, fontSize: 9, color: "#ccc" }}>▶</span>}</div>
                             <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, color: "#aaa" }}>{formatDate(e.date)}</div>
@@ -440,11 +474,15 @@ function App() {
               {calendarDays.map((day, i) => {
                 const evts = eventsForDay(day);
                 const today = isToday(day);
+                const dayKey = day ? `${calMonth}-${day}` : null;
+                const isSelected = selectedDay === dayKey;
                 return (
-                  <div key={i} style={{ minHeight: 80, background: day ? (today ? "#FFFBEF" : "#fff") : "transparent", borderRadius: 8, padding: day ? 6 : 0, border: today ? "2px solid #E8A33E" : "1px solid #f0ede8" }}>
+                  <div key={i}
+                    onClick={() => day && setSelectedDay(isSelected ? null : dayKey)}
+                    style={{ minHeight: 80, background: day ? (isSelected ? "#F0EDE8" : today ? "#FFFBEF" : "#fff") : "transparent", borderRadius: 8, padding: day ? 6 : 0, border: isSelected ? "2px solid #1A1A1A" : today ? "2px solid #E8A33E" : "1px solid #f0ede8", cursor: day ? "pointer" : "default", transition: "background 0.15s" }}>
                     {day && (
                       <>
-                        <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: today ? 700 : 400, color: today ? "#E8A33E" : "#999", marginBottom: 2 }}>{day}</div>
+                        <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: (today || isSelected) ? 700 : 400, color: isSelected ? "#1A1A1A" : today ? "#E8A33E" : "#999", marginBottom: 2 }}>{day}</div>
                         {evts.slice(0, 3).map((e, j) => (
                           <div key={j} style={{ fontSize: 9, fontFamily: "'DM Sans',sans-serif", fontWeight: 500, padding: "2px 4px", borderRadius: 3, marginBottom: 1, background: e.course ? courseColor(e.course) + "18" : "#eee", color: e.course ? courseColor(e.course) : "#888", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", borderLeft: e.type === "exam" ? `2px solid ${courseColor(e.course) || "#888"}` : "none" }}>
                             {e.type === "exam" ? "⚡ " : ""}{e.label.replace(/^(SOC|PS|ISLM): /, "")}
@@ -457,6 +495,50 @@ function App() {
                 );
               })}
             </div>
+
+            {/* Day detail panel */}
+            {selectedDay && (() => {
+              const [selMonth, selDay] = selectedDay.split("-").map(Number);
+              const dateStr = `2026-${String(selMonth + 1).padStart(2,"0")}-${String(selDay).padStart(2,"0")}`;
+              const dayEvts = EVENTS.filter((e) => e.date === dateStr && (!selectedCourse || e.course === selectedCourse || e.course === null));
+              const dayLabel = new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+              return (
+                <div style={{ marginTop: 16, background: "#fff", borderRadius: 12, padding: "20px 24px", boxShadow: "0 2px 12px rgba(0,0,0,0.08)", borderTop: "3px solid #1A1A1A" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                    <div style={{ fontFamily: "'Newsreader',serif", fontSize: 18, fontWeight: 700 }}>{dayLabel}</div>
+                    <button onClick={() => setSelectedDay(null)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#bbb" }}>✕</button>
+                  </div>
+                  {dayEvts.length === 0 ? (
+                    <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "#bbb" }}>Nothing scheduled.</div>
+                  ) : dayEvts.map((e, i) => {
+                    const key = "cal-" + e.date + e.label;
+                    const isOpen = expandedEvent === key;
+                    const clickable = e.type === "reading" && e.full;
+                    const isHighlighted = e.type === "exam" || e.type === "deadline";
+                    return (
+                      <div key={i} style={{ marginBottom: 10 }}>
+                        <div
+                          onClick={() => clickable && setExpandedEvent(isOpen ? null : key)}
+                          style={{ display: "flex", gap: 12, alignItems: "center", cursor: clickable ? "pointer" : "default", padding: isHighlighted ? "10px 14px" : "6px 0", background: isHighlighted ? (e.course ? courseColor(e.course) + "14" : "#fff5f0") : "transparent", borderRadius: isHighlighted ? 8 : 0, border: isHighlighted ? `1.5px solid ${e.course ? courseColor(e.course) + "50" : "#f0d0c0"}` : "none" }}
+                        >
+                          <div style={{ width: 24, height: 24, borderRadius: "50%", background: isHighlighted ? (e.course ? courseColor(e.course) : "#E8483E") : (e.course ? courseColor(e.course) + "25" : "#eee"), border: isHighlighted ? "none" : `1.5px solid ${e.course ? courseColor(e.course) + "55" : "#ccc"}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff", flexShrink: 0 }}>{isHighlighted ? "!" : ""}</div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: isHighlighted ? 700 : 500, color: isHighlighted ? (e.course ? courseColor(e.course) : "#E8483E") : "#333" }}>
+                              {e.label}{clickable && <span style={{ marginLeft: 5, fontSize: 9, color: "#ccc" }}>▶</span>}
+                            </div>
+                          </div>
+                        </div>
+                        {isOpen && e.full && (
+                          <div style={{ marginLeft: 36, marginTop: 4, padding: "8px 12px", background: e.course ? courseColor(e.course) + "12" : "#f5f3f0", borderLeft: `2px solid ${e.course ? courseColor(e.course) : "#ddd"}`, borderRadius: "0 6px 6px 0", fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#555", lineHeight: 1.6 }}>
+                            {e.full}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -486,7 +568,7 @@ function App() {
                     {isCurrent && <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 9, color: "#E8A33E", fontWeight: 600 }}>NOW</div>}
                   </div>
                   <div style={{ width: 2, background: isCurrent ? "#E8A33E" : "#e8e4df", borderRadius: 1, position: "relative", flexShrink: 0 }}>
-                    {isCurrent && <div style={{ position: "absolute", top: 14, left: -4, width: 10, height: 10, borderRadius: "50%", background: "#E8A33E" }} />}
+                    {isCurrent && <div style={{ position: "absolute", top: `calc(${weekDayPct * 100}% - 5px)`, left: -4, width: 10, height: 10, borderRadius: "50%", background: "#E8A33E" }} />}
                   </div>
                   <div style={{ flex: 1, paddingBottom: 12, paddingTop: 8 }}>
                     {weekEvents.length === 0 && <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#ccc", padding: "4px 0" }}>—</div>}
