@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classes — Zubin Tagore</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #FAF8F5; }
+#root { min-height: 100vh; }
+
+.back-link {
+  position: fixed;
+  top: 20px;
+  left: 24px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  letter-spacing: 0.12em;
+  z-index: 100;
+  transition: color 0.2s;
+}
+.back-link:hover { color: rgba(255,255,255,0.9); }
+</style>
+</head>
+<body>
+
+<!-- ── PASSWORD GATE ── -->
+<div id="pw-gate" style="
+  display:none;
+  position:fixed;inset:0;z-index:9999;
+  background:#0e0d0b;
+  flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:20px;
+">
+  <p style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(240,235,224,0.4);">enter password</p>
+  <input id="pw-input" type="password" autocomplete="current-password"
+    style="
+      background:transparent;
+      border:none;border-bottom:1px solid rgba(240,235,224,0.18);
+      color:#f0ebe0;font-family:'DM Sans',sans-serif;font-size:1rem;
+      letter-spacing:0.2em;text-align:center;
+      width:160px;padding:8px 0;outline:none;
+    "
+    placeholder="••••••••"
+  />
+  <p id="pw-err" style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.1em;color:#c0392b;opacity:0;transition:opacity 0.3s;">incorrect</p>
+</div>
+<script>
+(function(){
+  var KEY='zt_auth', PASS='1234';
+  var gate=document.getElementById('pw-gate');
+  var inp=document.getElementById('pw-input');
+  var err=document.getElementById('pw-err');
+  if(sessionStorage.getItem(KEY)==='1'){gate.style.display='none';return;}
+  gate.style.display='flex';
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){
+      if(inp.value===PASS){
+        sessionStorage.setItem(KEY,'1');
+        gate.style.opacity='0';
+        gate.style.transition='opacity 0.4s';
+        setTimeout(function(){gate.style.display='none';},400);
+      } else {
+        inp.value='';
+        err.style.opacity='1';
+        setTimeout(function(){err.style.opacity='0';},2000);
+      }
+    }
+  });
+  setTimeout(function(){inp.focus();},50);
+})();
+</script>
+<!-- ── END PASSWORD GATE ── -->
+
+<a href="index.html" class="back-link">← home</a>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useMemo } = React;
+
+const COURSES = [
+  {
+    id: "soc133",
+    code: "SOC 133",
+    name: "Collective Behavior",
+    professor: "Gary Yeritsian",
+    email: "gyeritsian@ucla.edu",
+    schedule: "MW 12:30–1:45 PM",
+    location: "Perloff 1102",
+    color: "#E86C47",
+    accent: "#FCEADE",
+    grading: [
+      { item: "Module 1 Assessment", pct: "33.3%" },
+      { item: "Module 2 Assessment", pct: "33.3%" },
+      { item: "Module 3 Assessment", pct: "33.3%" },
+    ],
+    tas: ["Greg Kyle", "Dominique Sparks"],
+    notes: "Three in-class assessments (MC + essay). Curved grading. No devices encouraged.",
+  },
+  {
+    id: "ps113a",
+    code: "PS 113A",
+    name: "20th C. Political Theory",
+    professor: "Tejas Parasher",
+    email: "tparasher@polisci.ucla.edu",
+    schedule: "MW 3:30–4:45 PM",
+    location: "Fowler A103B",
+    color: "#4A7C6F",
+    accent: "#DFF0EA",
+    grading: [
+      { item: "Discussion Participation", pct: "40%" },
+      { item: "Midterm Exam", pct: "30%" },
+      { item: "Final Exam", pct: "30%" },
+    ],
+    tas: ["Tomi Kolapo", "Michael Mirer", "Sara Elbanna", "Spenser Kussin-Gika"],
+    notes: "Hand-written exams (Blue Books). Sign up for office hours in advance. Weekly group presentations in section.",
+  },
+  {
+    id: "islm107",
+    code: "ISLM ST 107",
+    name: "Islam in the West",
+    professor: "A. Sayeed",
+    email: "sayeed@humnet.ucla.edu",
+    schedule: "TuTh 11:00 AM–12:15 PM",
+    location: "Kaplan A51",
+    color: "#8B6BAE",
+    accent: "#EDE6F5",
+    grading: [
+      { item: "Attendance & Participation", pct: "30%" },
+      { item: "Paper 1 (2–3 pp.)", pct: "10%" },
+      { item: "Quizzes", pct: "15%" },
+      { item: "Midterm", pct: "20%" },
+      { item: "Final Paper (6–7 pp.)", pct: "25%" },
+    ],
+    tas: [],
+    notes: "Device-free zone. Final paper requires field trip to a local Muslim institution. Late papers lose one grade per day.",
+  },
+];
+
+const EVENTS = [
+  { date: "2026-03-30", label: "SOC: Park reading", course: "soc133", type: "reading" },
+  { date: "2026-04-01", label: "SOC: Goldstone & Gureckis", course: "soc133", type: "reading" },
+  { date: "2026-04-06", label: "SOC: Le Bon – The Crowd", course: "soc133", type: "reading" },
+  { date: "2026-04-08", label: "SOC: McClelland – Freud", course: "soc133", type: "reading" },
+  { date: "2026-04-13", label: "SOC: Drury & Reicher", course: "soc133", type: "reading" },
+  { date: "2026-04-15", label: "SOC: Sullivan / Butsch", course: "soc133", type: "reading" },
+  { date: "2026-04-20", label: "SOC: Module 1 Assessment", course: "soc133", type: "exam" },
+  { date: "2026-05-11", label: "SOC: Module 2 Assessment", course: "soc133", type: "exam" },
+  { date: "2026-06-03", label: "SOC: Module 3 Assessment", course: "soc133", type: "exam" },
+  { date: "2026-03-30", label: "PS: Hobsbawm reading", course: "ps113a", type: "reading" },
+  { date: "2026-04-01", label: "PS: Arendt – Authority", course: "ps113a", type: "reading" },
+  { date: "2026-04-06", label: "PS: Weber – Science", course: "ps113a", type: "reading" },
+  { date: "2026-04-08", label: "PS: Weber – Politics", course: "ps113a", type: "reading" },
+  { date: "2026-04-13", label: "PS: Luxemburg – Russian Rev.", course: "ps113a", type: "reading" },
+  { date: "2026-04-15", label: "PS: Luxemburg – Leninism/Marxism", course: "ps113a", type: "reading" },
+  { date: "2026-04-20", label: "PS: Gandhi – Hind Swaraj 1–10", course: "ps113a", type: "reading" },
+  { date: "2026-04-22", label: "PS: Gandhi – Hind Swaraj 11–20", course: "ps113a", type: "reading" },
+  { date: "2026-04-27", label: "PS: Review Lecture (no reading)", course: "ps113a", type: "info" },
+  { date: "2026-04-29", label: "PS 113A: MIDTERM EXAM", course: "ps113a", type: "exam" },
+  { date: "2026-05-04", label: "PS: Schmitt – Concept §1–5", course: "ps113a", type: "reading" },
+  { date: "2026-05-06", label: "PS: Schmitt – Concept §6–8", course: "ps113a", type: "reading" },
+  { date: "2026-05-11", label: "PS: Arendt – On Revolution Intro+Ch1", course: "ps113a", type: "reading" },
+  { date: "2026-05-13", label: "PS: Arendt – On Revolution Ch2–3", course: "ps113a", type: "reading" },
+  { date: "2026-05-18", label: "PS: Fanon – Wretched Ch1", course: "ps113a", type: "reading" },
+  { date: "2026-05-20", label: "PS: Fanon – Wretched Ch2–3", course: "ps113a", type: "reading" },
+  { date: "2026-05-27", label: "PS: Berlin – Political Ideas", course: "ps113a", type: "reading" },
+  { date: "2026-06-01", label: "PS: Berlin – Two Concepts of Liberty", course: "ps113a", type: "reading" },
+  { date: "2026-06-03", label: "PS: Fukuyama – End of History?", course: "ps113a", type: "reading" },
+  { date: "2026-06-12", label: "PS 113A: FINAL EXAM 11:30 AM", course: "ps113a", type: "exam" },
+  { date: "2026-04-02", label: "ISLM: Curtis + Echchaibi readings", course: "islm107", type: "reading" },
+  { date: "2026-04-07", label: "ISLM: Curtis – Practice of Islam", course: "islm107", type: "reading" },
+  { date: "2026-04-09", label: "ISLM: Turner / Howell / Abdullah", course: "islm107", type: "reading" },
+  { date: "2026-04-14", label: "ISLM: Malcolm X selections", course: "islm107", type: "reading" },
+  { date: "2026-04-16", label: "ISLM: Paper 1 due this week", course: "islm107", type: "deadline" },
+  { date: "2026-04-21", label: "ISLM: Jamal & Albana / Spellberg", course: "islm107", type: "reading" },
+  { date: "2026-04-23", label: "ISLM: Takim – Shiʿism", course: "islm107", type: "reading" },
+  { date: "2026-04-28", label: "ISLM: Aidi / Hermansen – Sufism", course: "islm107", type: "reading" },
+  { date: "2026-04-30", label: "ISLM: MIDTERM", course: "islm107", type: "exam" },
+  { date: "2026-05-05", label: "ISLM: Feldman / Jackson – Islamic Law", course: "islm107", type: "reading" },
+  { date: "2026-05-07", label: "ISLM: Majeed / Hammer – Gender", course: "islm107", type: "reading" },
+  { date: "2026-05-12", label: "ISLM: Chan-Malik / Abdul Khabeer", course: "islm107", type: "reading" },
+  { date: "2026-05-14", label: "ISLM: Mashouf screening", course: "islm107", type: "info" },
+  { date: "2026-05-19", label: "ISLM: Leonard – Organizing Communities", course: "islm107", type: "reading" },
+  { date: "2026-05-21", label: "ISLM: Wardenburg – Islam in Europe", course: "islm107", type: "reading" },
+  { date: "2026-05-26", label: "ISLM: Hansen – Borders of Islam", course: "islm107", type: "reading" },
+  { date: "2026-05-28", label: "ISLM: Global Islamophobia", course: "islm107", type: "reading" },
+  { date: "2026-06-02", label: "ISLM: Marzouki – Islam: An American Religion", course: "islm107", type: "reading" },
+  { date: "2026-06-04", label: "ISLM: Last class", course: "islm107", type: "info" },
+  { date: "2026-05-25", label: "Memorial Day – No Classes", course: null, type: "holiday" },
+  { date: "2026-05-27", label: "Eid ul-Adha", course: null, type: "holiday" },
+];
+
+const TODAY = new Date();
+const TABS = ["overview", "calendar", "timeline"];
+
+function getDaysUntil(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  const t = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate());
+  return Math.ceil((d - t) / 86400000);
+}
+function formatDate(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+}
+function getWeekNumber(dateStr) {
+  const start = new Date("2026-03-30T00:00:00");
+  const d = new Date(dateStr + "T00:00:00");
+  return Math.floor((d - start) / (7 * 86400000)) + 1;
+}
+
+export default function App() {
+  const [tab, setTab] = useState("overview");
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [calMonth, setCalMonth] = useState(TODAY.getMonth());
+  const [expandedCard, setExpandedCard] = useState(null);
+
+  const upcoming = useMemo(() => {
+    return EVENTS
+      .filter((e) => getDaysUntil(e.date) >= 0)
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(0, 8);
+  }, []);
+
+  const exams = useMemo(() =>
+    EVENTS.filter((e) => e.type === "exam" || e.type === "deadline")
+      .sort((a, b) => a.date.localeCompare(b.date)), []);
+
+  const courseColor = (id) => COURSES.find((c) => c.id === id)?.color || "#888";
+  const typeIcon = (type) => {
+    switch (type) {
+      case "exam": return "!";
+      case "deadline": return "⏰";
+      case "reading": return "§";
+      case "holiday": return "☀";
+      default: return "·";
+    }
+  };
+
+  const calendarDays = useMemo(() => {
+    const year = 2026;
+    const first = new Date(year, calMonth, 1);
+    const last = new Date(year, calMonth + 1, 0);
+    const days = [];
+    for (let i = 0; i < first.getDay(); i++) days.push(null);
+    for (let d = 1; d <= last.getDate(); d++) days.push(d);
+    return days;
+  }, [calMonth]);
+
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  const eventsForDay = (day) => {
+    if (!day) return [];
+    const dateStr = `2026-${String(calMonth + 1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    return EVENTS.filter((e) => e.date === dateStr && (!selectedCourse || e.course === selectedCourse || e.course === null));
+  };
+
+  const isToday = (day) => {
+    return calMonth === TODAY.getMonth() && day === TODAY.getDate();
+  };
+
+  const quarterStart = new Date("2026-03-30");
+  const quarterEnd = new Date("2026-06-12");
+  const totalDays = (quarterEnd - quarterStart) / 86400000;
+  const elapsed = Math.max(0, (TODAY - quarterStart) / 86400000);
+  const pct = Math.min(100, Math.round((elapsed / totalDays) * 100));
+
+  return (
+    <div style={{ fontFamily: "'Newsreader','Georgia',serif", background: "#FAF8F5", minHeight: "100vh", color: "#1A1A1A" }}>
+      <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+      {/* Header */}
+      <div style={{ background: "linear-gradient(135deg,#1A1A1A 0%,#2D2D2D 100%)", padding: "48px 32px 32px", color: "#FAF8F5" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, letterSpacing: 3, textTransform: "uppercase", opacity: 0.45, marginBottom: 8 }}>UCLA Spring 2026</div>
+          <h1 style={{ fontFamily: "'Newsreader',serif", fontSize: 36, fontWeight: 700, margin: 0, lineHeight: 1.15 }}>Quarter Dashboard</h1>
+          <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, opacity: 0.55 }}>
+              Today: {TODAY.toLocaleDateString("en-US",{ weekday:"long", month:"long", day:"numeric", year:"numeric" })}
+            </div>
+            <div style={{ flex: 1, minWidth: 120, maxWidth: 260 }}>
+              <div style={{ height: 4, background: "rgba(255,255,255,0.12)", borderRadius: 2, overflow: "hidden" }}>
+                <div style={{ width: `${pct}%`, height: "100%", background: "linear-gradient(90deg,#E86C47,#8B6BAE)", borderRadius: 2 }} />
+              </div>
+            </div>
+            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, opacity: 0.45 }}>{pct}% through quarter</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 32px" }}>
+        <div style={{ display: "flex", borderBottom: "1px solid #E0DCD7" }}>
+          {TABS.map((t) => (
+            <button key={t} onClick={() => setTab(t)} style={{
+              fontFamily: "'DM Sans',sans-serif", fontSize: 13,
+              fontWeight: tab === t ? 600 : 400,
+              padding: "14px 20px", background: "none", border: "none",
+              borderBottom: tab === t ? "2px solid #1A1A1A" : "2px solid transparent",
+              cursor: "pointer", color: tab === t ? "#1A1A1A" : "#999",
+              textTransform: "capitalize", letterSpacing: 0.5,
+            }}>{t}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "24px 32px 80px" }}>
+
+        {/* OVERVIEW */}
+        {tab === "overview" && (
+          <div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16, marginBottom: 32 }}>
+              {COURSES.map((c) => (
+                <div key={c.id} onClick={() => setExpandedCard(expandedCard === c.id ? null : c.id)} style={{
+                  background: "#fff", borderRadius: 12, padding: 24, cursor: "pointer",
+                  borderLeft: `4px solid ${c.color}`,
+                  boxShadow: expandedCard === c.id ? "0 8px 32px rgba(0,0,0,0.1)" : "0 1px 4px rgba(0,0,0,0.06)",
+                  transition: "box-shadow 0.2s",
+                }}>
+                  <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: 2, color: c.color, textTransform: "uppercase" }}>{c.code}</div>
+                  <div style={{ fontSize: 20, fontWeight: 700, marginTop: 4, lineHeight: 1.25 }}>{c.name}</div>
+                  <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "#777", marginTop: 8 }}>{c.professor} · {c.schedule}</div>
+                  <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#999", marginTop: 2 }}>{c.location}</div>
+                  {expandedCard === c.id && (
+                    <div style={{ marginTop: 16, borderTop: "1px solid #eee", paddingTop: 16 }}>
+                      <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", color: "#999", marginBottom: 8 }}>Grade Breakdown</div>
+                      {c.grading.map((g, i) => (
+                        <div key={i} style={{ display: "flex", justifyContent: "space-between", fontFamily: "'DM Sans',sans-serif", fontSize: 13, padding: "3px 0", color: "#555" }}>
+                          <span>{g.item}</span>
+                          <span style={{ fontWeight: 600, color: c.color }}>{g.pct}</span>
+                        </div>
+                      ))}
+                      {c.tas.length > 0 && (
+                        <div style={{ marginTop: 12, fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#888" }}>TAs: {c.tas.join(", ")}</div>
+                      )}
+                      <div style={{ marginTop: 10, fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#888", fontStyle: "italic", lineHeight: 1.5 }}>{c.notes}</div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+              <div>
+                <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>Coming Up</div>
+                <div style={{ background: "#fff", borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+                  {upcoming.length === 0 && (
+                    <div style={{ padding: "16px 18px", fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "#bbb" }}>All caught up.</div>
+                  )}
+                  {upcoming.map((e, i) => {
+                    const days = getDaysUntil(e.date);
+                    return (
+                      <div key={i} style={{ padding: "12px 18px", borderBottom: i < upcoming.length - 1 ? "1px solid #f3f1ee" : "none", display: "flex", gap: 12, alignItems: "center" }}>
+                        <div style={{ width: 28, height: 28, borderRadius: 6, background: e.course ? courseColor(e.course) : "#ccc", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{typeIcon(e.type)}</div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{e.label}</div>
+                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, color: "#aaa" }}>{formatDate(e.date)}</div>
+                        </div>
+                        <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, color: days <= 3 ? "#E8483E" : days <= 7 ? "#E8A33E" : "#999", flexShrink: 0 }}>
+                          {days === 0 ? "today" : days === 1 ? "tmrw" : `${days}d`}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>Exams & Deadlines</div>
+                <div style={{ background: "#fff", borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+                  {exams.map((e, i) => {
+                    const days = getDaysUntil(e.date);
+                    const past = days < 0;
+                    return (
+                      <div key={i} style={{ padding: "12px 18px", borderBottom: i < exams.length - 1 ? "1px solid #f3f1ee" : "none", display: "flex", gap: 12, alignItems: "center", opacity: past ? 0.4 : 1 }}>
+                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: e.course ? courseColor(e.course) : "#ccc", flexShrink: 0 }} />
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 600 }}>{e.label}</div>
+                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, color: "#aaa" }}>{formatDate(e.date)}</div>
+                        </div>
+                        <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, color: past ? "#ccc" : days <= 7 ? "#E8483E" : "#999" }}>
+                          {past ? "done" : days === 0 ? "today" : `${days}d`}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CALENDAR */}
+        {tab === "calendar" && (
+          <div>
+            <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
+              <button onClick={() => setSelectedCourse(null)} style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, padding: "6px 14px", borderRadius: 20, border: "1px solid #ddd", background: !selectedCourse ? "#1A1A1A" : "#fff", color: !selectedCourse ? "#fff" : "#666", cursor: "pointer", fontWeight: 500 }}>All</button>
+              {COURSES.map((c) => (
+                <button key={c.id} onClick={() => setSelectedCourse(selectedCourse === c.id ? null : c.id)} style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, padding: "6px 14px", borderRadius: 20, border: `1px solid ${c.color}40`, background: selectedCourse === c.id ? c.color : "#fff", color: selectedCourse === c.id ? "#fff" : c.color, cursor: "pointer", fontWeight: 500 }}>{c.code}</button>
+              ))}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+              <button onClick={() => setCalMonth(Math.max(2, calMonth - 1))} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#999" }}>‹</button>
+              <div style={{ fontFamily: "'Newsreader',serif", fontSize: 24, fontWeight: 700 }}>{monthNames[calMonth]} 2026</div>
+              <button onClick={() => setCalMonth(Math.min(5, calMonth + 1))} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#999" }}>›</button>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: 2, marginBottom: 4 }}>
+              {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map((d) => (
+                <div key={d} style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 10, fontWeight: 600, textAlign: "center", color: "#bbb", letterSpacing: 1, textTransform: "uppercase", padding: 4 }}>{d}</div>
+              ))}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: 2 }}>
+              {calendarDays.map((day, i) => {
+                const evts = eventsForDay(day);
+                const today = isToday(day);
+                return (
+                  <div key={i} style={{ minHeight: 80, background: day ? (today ? "#FFFBEF" : "#fff") : "transparent", borderRadius: 8, padding: day ? 6 : 0, border: today ? "2px solid #E8A33E" : "1px solid #f0ede8" }}>
+                    {day && (
+                      <>
+                        <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: today ? 700 : 400, color: today ? "#E8A33E" : "#999", marginBottom: 2 }}>{day}</div>
+                        {evts.slice(0, 3).map((e, j) => (
+                          <div key={j} style={{ fontSize: 9, fontFamily: "'DM Sans',sans-serif", fontWeight: 500, padding: "2px 4px", borderRadius: 3, marginBottom: 1, background: e.course ? courseColor(e.course) + "18" : "#eee", color: e.course ? courseColor(e.course) : "#888", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", borderLeft: e.type === "exam" ? `2px solid ${courseColor(e.course) || "#888"}` : "none" }}>
+                            {e.type === "exam" ? "⚡ " : ""}{e.label.replace(/^(SOC|PS|ISLM): /, "")}
+                          </div>
+                        ))}
+                        {evts.length > 3 && <div style={{ fontSize: 9, color: "#bbb", fontFamily: "'DM Sans'" }}>+{evts.length - 3} more</div>}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* TIMELINE */}
+        {tab === "timeline" && (
+          <div>
+            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#999", marginBottom: 20 }}>Quarter Timeline — Week by Week</div>
+            <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
+              <button onClick={() => setSelectedCourse(null)} style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, padding: "6px 14px", borderRadius: 20, border: "1px solid #ddd", background: !selectedCourse ? "#1A1A1A" : "#fff", color: !selectedCourse ? "#fff" : "#666", cursor: "pointer", fontWeight: 500 }}>All</button>
+              {COURSES.map((c) => (
+                <button key={c.id} onClick={() => setSelectedCourse(selectedCourse === c.id ? null : c.id)} style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, padding: "6px 14px", borderRadius: 20, border: `1px solid ${c.color}40`, background: selectedCourse === c.id ? c.color : "#fff", color: selectedCourse === c.id ? "#fff" : c.color, cursor: "pointer", fontWeight: 500 }}>{c.code}</button>
+              ))}
+            </div>
+            {Array.from({ length: 11 }, (_, w) => w + 1).map((week) => {
+              const weekEvents = EVENTS
+                .filter((e) => getWeekNumber(e.date) === week)
+                .filter((e) => !selectedCourse || e.course === selectedCourse || e.course === null)
+                .sort((a, b) => a.date.localeCompare(b.date));
+              const todayStr = `${TODAY.getFullYear()}-${String(TODAY.getMonth()+1).padStart(2,"0")}-${String(TODAY.getDate()).padStart(2,"0")}`;
+              const currentWeek = getWeekNumber(todayStr);
+              const isCurrent = week === currentWeek;
+              const isPast = week < currentWeek;
+              return (
+                <div key={week} style={{ display: "flex", gap: 20, marginBottom: 4, opacity: isPast ? 0.45 : 1 }}>
+                  <div style={{ width: 56, flexShrink: 0, textAlign: "right", paddingTop: 12 }}>
+                    <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 700, color: isCurrent ? "#E8A33E" : "#bbb" }}>WK {week}</div>
+                    {isCurrent && <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 9, color: "#E8A33E", fontWeight: 600 }}>NOW</div>}
+                  </div>
+                  <div style={{ width: 2, background: isCurrent ? "#E8A33E" : "#e8e4df", borderRadius: 1, position: "relative", flexShrink: 0 }}>
+                    {isCurrent && <div style={{ position: "absolute", top: 14, left: -4, width: 10, height: 10, borderRadius: "50%", background: "#E8A33E" }} />}
+                  </div>
+                  <div style={{ flex: 1, paddingBottom: 12, paddingTop: 8 }}>
+                    {weekEvents.length === 0 && <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#ccc", padding: "4px 0" }}>—</div>}
+                    {weekEvents.map((e, i) => (
+                      <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 6 }}>
+                        <div style={{ width: 6, height: 6, borderRadius: "50%", marginTop: 5, flexShrink: 0, background: e.type === "exam" ? "#E8483E" : e.type === "holiday" ? "#E8A33E" : e.course ? courseColor(e.course) : "#ccc" }} />
+                        <div>
+                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: e.type === "exam" ? 700 : 400, color: e.type === "exam" ? "#E8483E" : "#444" }}>{e.label}</div>
+                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 10, color: "#bbb" }}>{formatDate(e.date)}{getDaysUntil(e.date) >= 0 ? ` · ${getDaysUntil(e.date)}d away` : ""}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

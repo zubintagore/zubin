@@ -3,106 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zubin Tagore</title>
+<title>About — Zubin Tagore</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
-  height: 100%;
+  min-height: 100%;
   font-family: "Cormorant Garamond", serif;
   background: #0e0d0b;
   color: #f0ebe0;
-  overflow: hidden;
 }
 
-.frame {
+.back {
+  position: fixed;
+  top: 28px;
+  left: 32px;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(240,235,224,0.35);
+  text-decoration: none;
+  transition: color 0.2s;
+  z-index: 10;
+}
+.back:hover { color: rgba(240,235,224,0.75); }
+
+.page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  padding: 40px 24px;
-  gap: 0;
+  padding: 100px 32px 80px;
+  max-width: 680px;
+  margin: 0 auto;
 }
 
+/* Photo */
+.photo-wrap {
+  width: clamp(140px, 22vw, 200px);
+  height: clamp(140px, 22vw, 200px);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(240,235,224,0.12);
+  background: rgba(240,235,224,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-shrink: 0;
+}
+
+.photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-placeholder {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(240,235,224,0.25);
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* Text */
 .name {
-  font-size: clamp(64px, 10vw, 120px);
+  font-size: clamp(36px, 6vw, 54px);
   font-weight: 300;
   letter-spacing: 0.04em;
-  line-height: 1;
   text-align: center;
-  color: #f0ebe0;
+  margin-bottom: 10px;
 }
 
-.sub {
+.descriptor {
   font-family: "DM Mono", monospace;
-  font-weight: 300;
-  font-size: clamp(11px, 1.4vw, 14px);
+  font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(240,235,224,0.4);
-  margin-top: 20px;
   text-align: center;
+  margin-bottom: 48px;
 }
 
 .divider {
-  width: 1px;
-  height: 80px;
-  background: rgba(240,235,224,0.12);
-  margin: 52px 0 48px;
-}
-
-.nodes {
-  display: flex;
-  gap: clamp(28px, 6vw, 80px);
-  align-items: center;
-}
-
-.node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: opacity 0.25s;
-}
-.node:hover { opacity: 0.65; }
-
-.node-circle {
-  width: clamp(72px, 9vw, 108px);
-  height: clamp(72px, 9vw, 108px);
-  border-radius: 50%;
-  border: 1px solid rgba(240,235,224,0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.25s, background 0.25s;
-}
-.node:hover .node-circle {
-  border-color: rgba(240,235,224,0.45);
-  background: rgba(240,235,224,0.04);
-}
-
-.node-glyph {
-  font-size: clamp(22px, 3vw, 34px);
-  font-weight: 300;
-  color: rgba(240,235,224,0.55);
-  line-height: 1;
-}
-
-.node-label {
-  font-family: "DM Mono", monospace;
-  font-size: clamp(9px, 1vw, 11px);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(240,235,224,0.35);
-}
-
-.connector {
-  width: clamp(40px, 6vw, 80px);
+  width: 40px;
   height: 1px;
-  background: rgba(240,235,224,0.1);
+  background: rgba(240,235,224,0.12);
+  margin-bottom: 48px;
+}
+
+.bio {
+  font-size: clamp(18px, 2.5vw, 22px);
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(240,235,224,0.8);
+  text-align: center;
+  max-width: 560px;
+}
+
+.bio em {
+  font-style: italic;
+  color: rgba(240,235,224,0.55);
+}
+
+.quote {
+  margin-top: 52px;
+  padding: 0 20px;
+  font-size: clamp(15px, 2vw, 18px);
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(240,235,224,0.38);
+  text-align: center;
+  line-height: 1.7;
+  border-left: 1px solid rgba(240,235,224,0.1);
+}
+
+.quote cite {
+  display: block;
+  margin-top: 12px;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(240,235,224,0.22);
 }
 </style>
 </head>
@@ -138,14 +166,13 @@ html, body {
   var err=document.getElementById('pw-err');
   if(sessionStorage.getItem(KEY)==='1'){gate.style.display='none';return;}
   gate.style.display='flex';
-  document.body.style.overflow='hidden';
   inp.addEventListener('keydown',function(e){
     if(e.key==='Enter'){
       if(inp.value===PASS){
         sessionStorage.setItem(KEY,'1');
         gate.style.opacity='0';
         gate.style.transition='opacity 0.4s';
-        setTimeout(function(){gate.style.display='none';document.body.style.overflow='';},400);
+        setTimeout(function(){gate.style.display='none';},400);
       } else {
         inp.value='';
         err.style.opacity='1';
@@ -158,29 +185,33 @@ html, body {
 </script>
 <!-- ── END PASSWORD GATE ── -->
 
-<div class="frame">
+<a href="index.html" class="back">← home</a>
+
+<div class="page">
+
+  <div class="photo-wrap">
+    <!-- Replace src with your actual photo path, e.g. src="photo.jpg" -->
+    <!-- <img src="photo.jpg" alt="Zubin Tagore"> -->
+    <div class="photo-placeholder">photo<br>coming<br>soon</div>
+  </div>
+
   <div class="name">Zubin Tagore</div>
-  <div class="sub">Political Science &nbsp;·&nbsp; UCLA &nbsp;·&nbsp; Los Angeles</div>
+  <div class="descriptor">Political Science &nbsp;·&nbsp; UCLA &nbsp;·&nbsp; Los Angeles</div>
 
   <div class="divider"></div>
 
-  <div class="nodes">
-    <a href="about.html" class="node">
-      <div class="node-circle">
-        <span class="node-glyph">◦</span>
-      </div>
-      <span class="node-label">About</span>
-    </a>
+  <p class="bio">
+    Political science student at UCLA, thinking about power, systems,
+    and what comes next. Interested in how ideas move through institutions
+    — and the gaps where they don't.
+  </p>
 
-    <div class="connector"></div>
+  <blockquote class="quote">
+    "You do not rise to the level of your goals.<br>
+    You fall to the level of your systems."
+    <cite>— James Clear</cite>
+  </blockquote>
 
-    <a href="classes.html" class="node">
-      <div class="node-circle">
-        <span class="node-glyph">◦</span>
-      </div>
-      <span class="node-label">Classes</span>
-    </a>
-  </div>
 </div>
 
 </body>
