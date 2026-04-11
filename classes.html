@@ -94,12 +94,12 @@ const COURSES = [
     email: "gyeritsian@ucla.edu",
     schedule: "MW 12:30–1:45 PM",
     location: "Perloff 1102",
-    color: "#E86C47",
-    accent: "#FCEADE",
+    color: "#C94F72",
+    accent: "#FAE8EF",
     grading: [
-      { item: "Module 1 Assessment", pct: "33.3%" },
-      { item: "Module 2 Assessment", pct: "33.3%" },
-      { item: "Module 3 Assessment", pct: "33.3%" },
+      { item: "Module 1 Assessment", pct: "33.3%", date: "Apr 20" },
+      { item: "Module 2 Assessment", pct: "33.3%", date: "May 11" },
+      { item: "Module 3 Assessment", pct: "33.3%", date: "Jun 3" },
     ],
     tas: ["Greg Kyle", "Dominique Sparks"],
     notes: "Three in-class assessments (MC + essay). Curved grading. No devices encouraged.",
@@ -112,12 +112,12 @@ const COURSES = [
     email: "tparasher@polisci.ucla.edu",
     schedule: "MW 3:30–4:45 PM",
     location: "Fowler A103B",
-    color: "#4A7C6F",
-    accent: "#DFF0EA",
+    color: "#3D7A52",
+    accent: "#DFF0E9",
     grading: [
-      { item: "Discussion Participation", pct: "40%" },
-      { item: "Midterm Exam", pct: "30%" },
-      { item: "Final Exam", pct: "30%" },
+      { item: "Discussion Participation", pct: "40%", date: "ongoing" },
+      { item: "Midterm Exam", pct: "30%", date: "Apr 29" },
+      { item: "Final Exam", pct: "30%", date: "Jun 12" },
     ],
     tas: ["Tomi Kolapo", "Michael Mirer", "Sara Elbanna", "Spenser Kussin-Gika"],
     notes: "Hand-written exams (Blue Books). Sign up for office hours in advance. Weekly group presentations in section.",
@@ -130,14 +130,14 @@ const COURSES = [
     email: "sayeed@humnet.ucla.edu",
     schedule: "TuTh 11:00 AM–12:15 PM",
     location: "Kaplan A51",
-    color: "#8B6BAE",
-    accent: "#EDE6F5",
+    color: "#C9A227",
+    accent: "#F8F0D8",
     grading: [
-      { item: "Attendance & Participation", pct: "30%" },
-      { item: "Paper 1 (2–3 pp.)", pct: "10%" },
-      { item: "Quizzes", pct: "15%" },
-      { item: "Midterm", pct: "20%" },
-      { item: "Final Paper (6–7 pp.)", pct: "25%" },
+      { item: "Attendance & Participation", pct: "30%", date: "ongoing" },
+      { item: "Paper 1 (2–3 pp.)", pct: "10%", date: "wk of Apr 16" },
+      { item: "Quizzes", pct: "15%", date: "various" },
+      { item: "Midterm", pct: "20%", date: "Apr 30" },
+      { item: "Final Paper (6–7 pp.)", pct: "25%", date: "TBD" },
     ],
     tas: [],
     notes: "Device-free zone. Final paper requires field trip to a local Muslim institution. Late papers lose one grade per day.",
@@ -145,54 +145,58 @@ const COURSES = [
 ];
 
 const EVENTS = [
-  { date: "2026-03-30", label: "SOC: Park reading", course: "soc133", type: "reading" },
-  { date: "2026-04-01", label: "SOC: Goldstone & Gureckis", course: "soc133", type: "reading" },
-  { date: "2026-04-06", label: "SOC: Le Bon – The Crowd", course: "soc133", type: "reading" },
-  { date: "2026-04-08", label: "SOC: McClelland – Freud", course: "soc133", type: "reading" },
-  { date: "2026-04-13", label: "SOC: Drury & Reicher", course: "soc133", type: "reading" },
-  { date: "2026-04-15", label: "SOC: Sullivan / Butsch", course: "soc133", type: "reading" },
+  // SOC 133
+  { date: "2026-03-30", label: "SOC: Park reading", course: "soc133", type: "reading", full: "Robert E. Park, 'Human Nature and Collective Behavior' (1927), American Journal of Sociology" },
+  { date: "2026-04-01", label: "SOC: Goldstone & Gureckis", course: "soc133", type: "reading", full: "Robert L. Goldstone & Todd M. Gureckis, 'Collective Behavior' (2009), Topics in Cognitive Science" },
+  { date: "2026-04-06", label: "SOC: Le Bon – The Crowd", course: "soc133", type: "reading", full: "Gustave Le Bon, The Crowd: A Study of the Popular Mind (1895), selection" },
+  { date: "2026-04-08", label: "SOC: McClelland – Freud", course: "soc133", type: "reading", full: "J.S. McClelland, 'The Leader and His Crowd: Freud's Group Psychology' (1921), in The Crowd and the Mob (1989)" },
+  { date: "2026-04-13", label: "SOC: Drury & Reicher", course: "soc133", type: "reading", full: "Drury & Reicher, 'Crowds and Collective Behavior' (2020), Oxford Research Encyclopedia of Psychology + Stephen Reicher on Crowd Psychology (2016) — podcast & transcript" },
+  { date: "2026-04-15", label: "SOC: Sullivan / Butsch", course: "soc133", type: "reading", full: "Sullivan, 'History and Concept of the Audience' (2013), in Media Audiences + Butsch, 'From Crowds to Masses: Movies, Radio, and Advertising' (2008), in The Citizen Audience" },
   { date: "2026-04-20", label: "SOC: Module 1 Assessment", course: "soc133", type: "exam" },
   { date: "2026-05-11", label: "SOC: Module 2 Assessment", course: "soc133", type: "exam" },
   { date: "2026-06-03", label: "SOC: Module 3 Assessment", course: "soc133", type: "exam" },
-  { date: "2026-03-30", label: "PS: Hobsbawm reading", course: "ps113a", type: "reading" },
-  { date: "2026-04-01", label: "PS: Arendt – Authority", course: "ps113a", type: "reading" },
-  { date: "2026-04-06", label: "PS: Weber – Science", course: "ps113a", type: "reading" },
-  { date: "2026-04-08", label: "PS: Weber – Politics", course: "ps113a", type: "reading" },
-  { date: "2026-04-13", label: "PS: Luxemburg – Russian Rev.", course: "ps113a", type: "reading" },
-  { date: "2026-04-15", label: "PS: Luxemburg – Leninism/Marxism", course: "ps113a", type: "reading" },
-  { date: "2026-04-20", label: "PS: Gandhi – Hind Swaraj 1–10", course: "ps113a", type: "reading" },
-  { date: "2026-04-22", label: "PS: Gandhi – Hind Swaraj 11–20", course: "ps113a", type: "reading" },
+  // PS 113A
+  { date: "2026-03-30", label: "PS: Hobsbawm reading", course: "ps113a", type: "reading", full: "Eric Hobsbawm, 'The Century: A Bird's Eye View' (1994)" },
+  { date: "2026-04-01", label: "PS: Arendt – Authority", course: "ps113a", type: "reading", full: "Hannah Arendt, 'Authority in the Twentieth Century' (1956)" },
+  { date: "2026-04-06", label: "PS: Weber – Science", course: "ps113a", type: "reading", full: "Max Weber, 'Science as a Vocation' (1917)" },
+  { date: "2026-04-08", label: "PS: Weber – Politics", course: "ps113a", type: "reading", full: "Max Weber, 'Politics as a Vocation' (1919)" },
+  { date: "2026-04-13", label: "PS: Luxemburg – Russian Rev.", course: "ps113a", type: "reading", full: "Rosa Luxemburg, 'The Russian Revolution' (1918)" },
+  { date: "2026-04-15", label: "PS: Luxemburg – Leninism/Marxism", course: "ps113a", type: "reading", full: "Rosa Luxemburg, 'Leninism or Marxism?' (1904)" },
+  { date: "2026-04-20", label: "PS: Gandhi – Hind Swaraj 1–10", course: "ps113a", type: "reading", full: "M.K. Gandhi, Hind Swaraj (1909), Chapters 1–10" },
+  { date: "2026-04-22", label: "PS: Gandhi – Hind Swaraj 11–20", course: "ps113a", type: "reading", full: "M.K. Gandhi, Hind Swaraj (1909), Chapters 11–20" },
   { date: "2026-04-27", label: "PS: Review Lecture (no reading)", course: "ps113a", type: "info" },
   { date: "2026-04-29", label: "PS 113A: MIDTERM EXAM", course: "ps113a", type: "exam" },
-  { date: "2026-05-04", label: "PS: Schmitt – Concept §1–5", course: "ps113a", type: "reading" },
-  { date: "2026-05-06", label: "PS: Schmitt – Concept §6–8", course: "ps113a", type: "reading" },
-  { date: "2026-05-11", label: "PS: Arendt – On Revolution Intro+Ch1", course: "ps113a", type: "reading" },
-  { date: "2026-05-13", label: "PS: Arendt – On Revolution Ch2–3", course: "ps113a", type: "reading" },
-  { date: "2026-05-18", label: "PS: Fanon – Wretched Ch1", course: "ps113a", type: "reading" },
-  { date: "2026-05-20", label: "PS: Fanon – Wretched Ch2–3", course: "ps113a", type: "reading" },
-  { date: "2026-05-27", label: "PS: Berlin – Political Ideas", course: "ps113a", type: "reading" },
-  { date: "2026-06-01", label: "PS: Berlin – Two Concepts of Liberty", course: "ps113a", type: "reading" },
-  { date: "2026-06-03", label: "PS: Fukuyama – End of History?", course: "ps113a", type: "reading" },
-  { date: "2026-06-12", label: "PS 113A: FINAL EXAM 11:30 AM", course: "ps113a", type: "exam" },
-  { date: "2026-04-02", label: "ISLM: Curtis + Echchaibi readings", course: "islm107", type: "reading" },
-  { date: "2026-04-07", label: "ISLM: Curtis – Practice of Islam", course: "islm107", type: "reading" },
-  { date: "2026-04-09", label: "ISLM: Turner / Howell / Abdullah", course: "islm107", type: "reading" },
-  { date: "2026-04-14", label: "ISLM: Malcolm X selections", course: "islm107", type: "reading" },
+  { date: "2026-05-04", label: "PS: Schmitt – Concept §1–5", course: "ps113a", type: "reading", full: "Carl Schmitt, The Concept of the Political (1932), Sections 1–5" },
+  { date: "2026-05-06", label: "PS: Schmitt – Concept §6–8", course: "ps113a", type: "reading", full: "Carl Schmitt, The Concept of the Political (1932), Sections 6–8" },
+  { date: "2026-05-11", label: "PS: Arendt – On Revolution Intro+Ch1", course: "ps113a", type: "reading", full: "Hannah Arendt, On Revolution (1963), Introduction and Chapter 1" },
+  { date: "2026-05-13", label: "PS: Arendt – On Revolution Ch2–3", course: "ps113a", type: "reading", full: "Hannah Arendt, On Revolution (1963), Chapters 2–3" },
+  { date: "2026-05-18", label: "PS: Fanon – Wretched Ch1", course: "ps113a", type: "reading", full: "Frantz Fanon, The Wretched of the Earth (1961), Chapter 1" },
+  { date: "2026-05-20", label: "PS: Fanon – Wretched Ch2–3", course: "ps113a", type: "reading", full: "Frantz Fanon, The Wretched of the Earth (1961), Chapters 2–3" },
+  { date: "2026-05-27", label: "PS: Berlin – Political Ideas", course: "ps113a", type: "reading", full: "Isaiah Berlin, 'Political Ideas in the Twentieth Century' (1950)" },
+  { date: "2026-06-01", label: "PS: Berlin – Two Concepts of Liberty", course: "ps113a", type: "reading", full: "Isaiah Berlin, 'Two Concepts of Liberty' (1958)" },
+  { date: "2026-06-03", label: "PS: Fukuyama – End of History?", course: "ps113a", type: "reading", full: "Francis Fukuyama, 'The End of History?' (1989)" },
+  { date: "2026-06-12", label: "PS 113A: FINAL EXAM 11:30 AM–2:30 PM", course: "ps113a", type: "exam" },
+  // ISLM ST 107
+  { date: "2026-04-02", label: "ISLM: Curtis + Echchaibi readings", course: "islm107", type: "reading", full: "E. Curtis IV, 'Study of American Muslims: A History,' Cambridge Companion to American Islam, pp.15–27 + N. Echchaibi, 'American Muslims and the Media,' pp.119–38" },
+  { date: "2026-04-07", label: "ISLM: Curtis – Practice of Islam", course: "islm107", type: "reading", full: "E. Curtis (ed.), Practice of Islam in America — chapter assigned by last name per Bruinlearn instructions" },
+  { date: "2026-04-09", label: "ISLM: Turner / Howell / Abdullah", course: "islm107", type: "reading", full: "R. Turner, 'African Muslim Slaves in Antebellum America,' pp.28–44 + S. Howell, 'Laying Groundwork for American Muslim Histories,' pp.45–64 + Z. Abdullah, 'American Muslims in Contemporary World,' pp.65–82, Cambridge Companion" },
+  { date: "2026-04-14", label: "ISLM: Malcolm X selections", course: "islm107", type: "reading", full: "Malcolm X, Selections (TBD)" },
   { date: "2026-04-16", label: "ISLM: Paper 1 due this week", course: "islm107", type: "deadline" },
-  { date: "2026-04-21", label: "ISLM: Jamal & Albana / Spellberg", course: "islm107", type: "reading" },
-  { date: "2026-04-23", label: "ISLM: Takim – Shiʿism", course: "islm107", type: "reading" },
-  { date: "2026-04-28", label: "ISLM: Aidi / Hermansen – Sufism", course: "islm107", type: "reading" },
+  { date: "2026-04-21", label: "ISLM: Jamal & Albana / Spellberg", course: "islm107", type: "reading", full: "A. Jamal & L. Albana, 'Demographics, Political Participation, and Representation,' Cambridge Companion, pp.98–118 + D. Spellberg, 'Why Can't a Muslim Be President?' Jefferson's Quran, pp.270–302" },
+  { date: "2026-04-23", label: "ISLM: Takim – Shiʿism", course: "islm107", type: "reading", full: "L. Takim, Shiʿism in America (selections) + 'Shiʿi Islam in the African-American Community,' Oxford Handbook of African American Islam" },
+  { date: "2026-04-28", label: "ISLM: Aidi / Hermansen – Sufism", course: "islm107", type: "reading", full: "H. Aidi, 'Let us be Moors' + 'Sufism' from Oxford Islamic Studies Online + M. Hermansen, 'What's American about American Sufi Movements?'" },
   { date: "2026-04-30", label: "ISLM: MIDTERM", course: "islm107", type: "exam" },
-  { date: "2026-05-05", label: "ISLM: Feldman / Jackson – Islamic Law", course: "islm107", type: "reading" },
-  { date: "2026-05-07", label: "ISLM: Majeed / Hammer – Gender", course: "islm107", type: "reading" },
-  { date: "2026-05-12", label: "ISLM: Chan-Malik / Abdul Khabeer", course: "islm107", type: "reading" },
+  { date: "2026-05-05", label: "ISLM: Feldman / Jackson – Islamic Law", course: "islm107", type: "reading", full: "Noah Feldman, 'Why Sharia?' + S. Jackson, 'Islamic Law, Muslims, and American Politics' + Report: 'Sharia Law: Coming to a Courthouse near You?'" },
+  { date: "2026-05-07", label: "ISLM: Majeed / Hammer – Gender", course: "islm107", type: "reading", full: "D. Majeed, 'Sexual Identity, Marriage, and Family' + J. Hammer, 'Studying American Muslim Women,' Cambridge Companion, pp.312–44" },
+  { date: "2026-05-12", label: "ISLM: Chan-Malik / Abdul Khabeer", course: "islm107", type: "reading", full: "S. Chan-Malik, 'Cultural and Literary Production of Muslim America' + S. Abdul Khabeer & M. AlHassen, 'Muslim Youth Cultures,' Cambridge Companion, pp.279–311" },
   { date: "2026-05-14", label: "ISLM: Mashouf screening", course: "islm107", type: "info" },
-  { date: "2026-05-19", label: "ISLM: Leonard – Organizing Communities", course: "islm107", type: "reading" },
-  { date: "2026-05-21", label: "ISLM: Wardenburg – Islam in Europe", course: "islm107", type: "reading" },
-  { date: "2026-05-26", label: "ISLM: Hansen – Borders of Islam", course: "islm107", type: "reading" },
-  { date: "2026-05-28", label: "ISLM: Global Islamophobia", course: "islm107", type: "reading" },
-  { date: "2026-06-02", label: "ISLM: Marzouki – Islam: An American Religion", course: "islm107", type: "reading" },
+  { date: "2026-05-19", label: "ISLM: Media panel + Leonard", course: "islm107", type: "reading", full: "Muslims and media representation panel + K. Leonard, 'Organizing Communities: Institutions, Networks, Groups,' Cambridge Companion, pp.170–89" },
+  { date: "2026-05-21", label: "ISLM: Wardenburg – Islam in Europe", course: "islm107", type: "reading", full: "Wardenburg, Muslims and Others (selected chapters) — Islam in Europe: historical overview" },
+  { date: "2026-05-26", label: "ISLM: Hansen – Borders of Islam", course: "islm107", type: "reading", full: "Hansen et al. (eds.), Borders of Islam (selected chapters) — Clash of Civilizations? The Cases of Bosnia and Spain" },
+  { date: "2026-05-28", label: "ISLM: Global Islamophobia", course: "islm107", type: "reading", full: "Selections from Esposito et al., Global Islamophobia (TBD)" },
+  { date: "2026-06-02", label: "ISLM: Marzouki – Islam: An American Religion", course: "islm107", type: "reading", full: "N. Marzouki, Islam: An American Religion — Introduction and Chapter 2" },
   { date: "2026-06-04", label: "ISLM: Last class", course: "islm107", type: "info" },
+  // Holidays
   { date: "2026-05-25", label: "Memorial Day – No Classes", course: null, type: "holiday" },
   { date: "2026-05-27", label: "Eid ul-Adha", course: null, type: "holiday" },
 ];
@@ -220,6 +224,7 @@ function App() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [calMonth, setCalMonth] = useState(TODAY.getMonth());
   const [expandedCard, setExpandedCard] = useState(null);
+  const [expandedEvent, setExpandedEvent] = useState(null);
 
   const upcoming = useMemo(() => {
     return EVENTS
@@ -331,9 +336,12 @@ function App() {
                     <div style={{ marginTop: 16, borderTop: "1px solid #eee", paddingTop: 16 }}>
                       <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", color: "#999", marginBottom: 8 }}>Grade Breakdown</div>
                       {c.grading.map((g, i) => (
-                        <div key={i} style={{ display: "flex", justifyContent: "space-between", fontFamily: "'DM Sans',sans-serif", fontSize: 13, padding: "3px 0", color: "#555" }}>
-                          <span>{g.item}</span>
-                          <span style={{ fontWeight: 600, color: c.color }}>{g.pct}</span>
+                        <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: "'DM Sans',sans-serif", fontSize: 13, padding: "5px 0", borderBottom: i < c.grading.length - 1 ? "1px solid #f5f3f0" : "none", color: "#555" }}>
+                          <div>
+                            <div style={{ fontWeight: 500 }}>{g.item}</div>
+                            {g.date && <div style={{ fontSize: 11, color: "#bbb", marginTop: 1 }}>{g.date}</div>}
+                          </div>
+                          <span style={{ fontWeight: 700, color: c.color, fontSize: 14, flexShrink: 0, marginLeft: 12 }}>{g.pct}</span>
                         </div>
                       ))}
                       {c.tas.length > 0 && (
@@ -355,16 +363,29 @@ function App() {
                   )}
                   {upcoming.map((e, i) => {
                     const days = getDaysUntil(e.date);
+                    const key = "up-" + e.date + e.label;
+                    const isOpen = expandedEvent === key;
+                    const clickable = e.type === "reading" && e.full;
                     return (
-                      <div key={i} style={{ padding: "12px 18px", borderBottom: i < upcoming.length - 1 ? "1px solid #f3f1ee" : "none", display: "flex", gap: 12, alignItems: "center" }}>
-                        <div style={{ width: 28, height: 28, borderRadius: 6, background: e.course ? courseColor(e.course) : "#ccc", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{typeIcon(e.type)}</div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{e.label}</div>
-                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, color: "#aaa" }}>{formatDate(e.date)}</div>
+                      <div key={i} style={{ borderBottom: i < upcoming.length - 1 ? "1px solid #f3f1ee" : "none" }}>
+                        <div
+                          onClick={() => clickable && setExpandedEvent(isOpen ? null : key)}
+                          style={{ padding: "12px 18px", display: "flex", gap: 12, alignItems: "center", cursor: clickable ? "pointer" : "default" }}
+                        >
+                          <div style={{ width: 28, height: 28, borderRadius: 6, background: e.course ? courseColor(e.course) : "#ccc", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{typeIcon(e.type)}</div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{e.label}{clickable && <span style={{ marginLeft: 5, fontSize: 9, color: "#ccc" }}>▶</span>}</div>
+                            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, color: "#aaa" }}>{formatDate(e.date)}</div>
+                          </div>
+                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, color: days <= 3 ? "#E8483E" : days <= 7 ? "#E8A33E" : "#999", flexShrink: 0 }}>
+                            {days === 0 ? "today" : days === 1 ? "tmrw" : `${days}d`}
+                          </div>
                         </div>
-                        <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, color: days <= 3 ? "#E8483E" : days <= 7 ? "#E8A33E" : "#999", flexShrink: 0 }}>
-                          {days === 0 ? "today" : days === 1 ? "tmrw" : `${days}d`}
-                        </div>
+                        {isOpen && e.full && (
+                          <div style={{ margin: "0 18px 12px 58px", padding: "8px 12px", background: e.course ? courseColor(e.course) + "12" : "#f5f3f0", borderLeft: `2px solid ${courseColor(e.course)}`, borderRadius: "0 6px 6px 0", fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#555", lineHeight: 1.5 }}>
+                            {e.full}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -469,15 +490,33 @@ function App() {
                   </div>
                   <div style={{ flex: 1, paddingBottom: 12, paddingTop: 8 }}>
                     {weekEvents.length === 0 && <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#ccc", padding: "4px 0" }}>—</div>}
-                    {weekEvents.map((e, i) => (
-                      <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 6 }}>
-                        <div style={{ width: 6, height: 6, borderRadius: "50%", marginTop: 5, flexShrink: 0, background: e.type === "exam" ? "#E8483E" : e.type === "holiday" ? "#E8A33E" : e.course ? courseColor(e.course) : "#ccc" }} />
-                        <div>
-                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: e.type === "exam" ? 700 : 400, color: e.type === "exam" ? "#E8483E" : "#444" }}>{e.label}</div>
-                          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 10, color: "#bbb" }}>{formatDate(e.date)}{getDaysUntil(e.date) >= 0 ? ` · ${getDaysUntil(e.date)}d away` : ""}</div>
+                    {weekEvents.map((e, i) => {
+                      const key = e.date + e.label;
+                      const isOpen = expandedEvent === key;
+                      const clickable = e.type === "reading" && e.full;
+                      return (
+                        <div key={i} style={{ marginBottom: 8 }}>
+                          <div
+                            onClick={() => clickable && setExpandedEvent(isOpen ? null : key)}
+                            style={{ display: "flex", gap: 10, alignItems: "flex-start", cursor: clickable ? "pointer" : "default" }}
+                          >
+                            <div style={{ width: 6, height: 6, borderRadius: "50%", marginTop: 5, flexShrink: 0, background: e.type === "exam" ? "#E8483E" : e.type === "holiday" ? "#E8A33E" : e.course ? courseColor(e.course) : "#ccc" }} />
+                            <div style={{ flex: 1 }}>
+                              <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: e.type === "exam" ? 700 : 400, color: e.type === "exam" ? "#E8483E" : "#444", display: "flex", alignItems: "center", gap: 6 }}>
+                                {e.label}
+                                {clickable && <span style={{ fontSize: 9, color: "#ccc", transition: "transform 0.2s", display: "inline-block", transform: isOpen ? "rotate(90deg)" : "rotate(0deg)" }}>▶</span>}
+                              </div>
+                              <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 10, color: "#bbb" }}>{formatDate(e.date)}{getDaysUntil(e.date) >= 0 ? ` · ${getDaysUntil(e.date)}d away` : ""}</div>
+                            </div>
+                          </div>
+                          {isOpen && e.full && (
+                            <div style={{ marginLeft: 16, marginTop: 4, padding: "8px 12px", background: e.course ? courseColor(e.course) + "12" : "#f5f3f0", borderLeft: `2px solid ${e.course ? courseColor(e.course) : "#ddd"}`, borderRadius: "0 6px 6px 0", fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: "#555", lineHeight: 1.5 }}>
+                              {e.full}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );
